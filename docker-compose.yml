@@ -1,0 +1,16 @@
+services:
+  auth_service:
+    build:
+      context: .
+      dockerfile: ./auth-service/Dockerfile.dev
+    ports:
+      - 8501:3000
+    volumes:
+      - ./auth-service:/app
+  postgres_db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: randogo
+      POSTGRES_PASSWORD: admin1

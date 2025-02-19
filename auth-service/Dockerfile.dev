@@ -1,0 +1,19 @@
+FROM golang:1.24.0
+
+# Environment variables which CompileDaemon requires to run
+ENV PROJECT_DIR=/app \
+    GO111MODULE=on \
+    CGO_ENABLED=0
+
+WORKDIR /app
+
+COPY ./auth-service /app
+
+# Install dependencies
+RUN go get .
+
+RUN go install github.com/githubnemo/CompileDaemon
+
+# The build flag sets how to build after a change has been detected in the source code
+# The command flag sets how to run the app after it has been built
+ENTRYPOINT CompileDaemon -build="go build -o api" -command="./api"
