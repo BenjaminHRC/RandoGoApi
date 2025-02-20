@@ -1,0 +1,22 @@
+FROM golang:1.24.0 AS build
+
+WORKDIR /app
+
+COPY ./auth-service/go.mod .
+
+RUN go mod download
+
+COPY ./auth-service /app
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /output/godocker
+
+FROM alpine:latest
+
+ENV GIN_MODE=release
+
+COPY --from=build /app/.env ./
+COPY --from=build /output/godocker /output/godocker
+
+# CMD [ "sleep", "infinity" ]
+CMD ["/output/godocker"]
+

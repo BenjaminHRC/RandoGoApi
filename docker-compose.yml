@@ -2,11 +2,13 @@ services:
   auth_service:
     build:
       context: .
-      dockerfile: ./auth-service/Dockerfile.dev
+      dockerfile: "./auth-service/Dockerfile.${ENV_MODE}"
     ports:
       - 8501:3000
     volumes:
       - ./auth-service:/app
+    depends_on:
+      - postgres_db
   postgres_db:
     image: postgres
     ports:
